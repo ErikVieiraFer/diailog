@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:conecta_ia/widgets/gradient_container.dart';
+import 'package:conecta_ia/providers/theme_provider.dart';
 import 'package:conecta_ia/providers/contact_provider.dart';
 import 'package:conecta_ia/screens/add_contact_screen.dart';
 import 'package:conecta_ia/screens/contact_detail_screen.dart';
@@ -10,26 +11,34 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GradientContainer(
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDarkMode = themeProvider.themeMode == ThemeMode.dark;
+
+    // O conteúdo principal do Scaffold
+    Widget mainContent = Scaffold(
+        // A cor de fundo é transparente no modo escuro para ver o gradiente
+        backgroundColor: isDarkMode ? Colors.transparent : null,
         appBar: AppBar(
           title: const Text(
-            'ConectAI',
+            'Diailog',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 24,
-              color: Colors.white,
             ),
           ),
           centerTitle: true,
-          backgroundColor: Colors.black.withOpacity(0.2),
-          elevation: 2,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(20),
-            ),
-          ),
+          backgroundColor: isDarkMode ? Colors.black.withOpacity(0.2) : null,
+          elevation: isDarkMode ? 0 : null,
+          actions: [
+            IconButton(
+              icon: Icon(isDarkMode
+                  ? Icons.light_mode_outlined
+                  : Icons.dark_mode_outlined),
+              onPressed: () {
+                themeProvider.toggleTheme();
+              },
+            )
+          ],
         ),
         body: Consumer<ContactProvider>(
         builder: (ctx, contactProvider, child) {
@@ -80,30 +89,27 @@ class HomeScreen extends StatelessWidget {
                   child: const Icon(Icons.delete, color: Colors.white),
                 ),
                 child: Card(
-                  color: Colors.white.withOpacity(0.9),
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  // O Card usará a cor e o estilo definidos no tema
                   margin: const EdgeInsets.symmetric(
                     horizontal: 15,
                     vertical: 6,
                   ),
                   child: ListTile(
-                    title: Text(contact.name),
+                    title: Text(
+                      contact.name,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
                     subtitle: Text(
                       contact.topics,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          icon: Icon(
-                            Icons.edit,
-                            color: Colors.grey.shade700,
-                          ),
+                          icon: const Icon(Icons.edit),
                           onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
@@ -113,10 +119,9 @@ class HomeScreen extends StatelessWidget {
                             );
                           },
                         ),
-                        Icon(
+                        const Icon(
                           Icons.arrow_forward_ios,
                           size: 16,
-                          color: Colors.grey.shade600,
                         ),
                       ],
                     ),
@@ -136,21 +141,25 @@ class HomeScreen extends StatelessWidget {
         child: const Center(
             child: Text(
           'Nenhum contato adicionado ainda.',
-          style: TextStyle(color: Colors.white70, fontSize: 16),
-        )),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (ctx) => const AddContactScreen()));
-        },
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.deepPurple,
-        elevation: 4,
-        child: const Icon(Icons.add),
-      ),
-      ),
-    );
+          style: TextStyle(fontSize: 16),
+        )), 
+      ), 
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.of(
+              context,
+            ).push(
+                MaterialPageRoute(builder: (ctx) => const AddContactScreen()));
+          },
+          
+          child: const Icon(Icons.add),
+        ),
+    ); 
+
+    if (isDarkMode) {
+      return GradientContainer(child: mainContent);
+    }
+
+    return mainContent;
   }
 }

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:conecta_ia/models/contact.dart';
-import 'package:conecta_ia/providers/contact_provider.dart';
-import 'package:conecta_ia/widgets/gradient_container.dart';
+import '../models/contact.dart';
+import '../providers/contact_provider.dart';
+import '../providers/theme_provider.dart';
+import '../widgets/gradient_container.dart';
 
 class AddContactScreen extends StatefulWidget {
   final Contact? contactToEdit;
@@ -57,23 +58,21 @@ class _AddContactScreenState extends State<AddContactScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GradientContainer(
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
+    final isDarkMode = Provider.of<ThemeProvider>(context).themeMode == ThemeMode.dark;
+
+    Widget mainContent = Scaffold(
+        backgroundColor: isDarkMode ? Colors.transparent : null,
         appBar: AppBar(
-          title: Text(_isEditing ? 'Editar Contato' : 'Adicionar Contato'),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          iconTheme: const IconThemeData(color: Colors.white),
+          title: Text(
+            _isEditing ? 'Editar Contato' : 'Adicionar Contato',
+          ),
+          backgroundColor: isDarkMode ? Colors.transparent : null,
+          elevation: isDarkMode ? 0 : null,
         ),
         body: Center(
           child: SingleChildScrollView(
             child: Card(
               margin: const EdgeInsets.all(24),
-              color: Colors.white.withOpacity(0.9),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
               child: Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: Form(
@@ -83,10 +82,8 @@ class _AddContactScreenState extends State<AddContactScreen> {
                     children: [
                       TextFormField(
                         controller: _nameController,
-                        style: const TextStyle(color: Colors.black87),
                         decoration: InputDecoration(
                           labelText: 'Nome',
-                          labelStyle: TextStyle(color: Colors.grey.shade700),
                           focusedBorder: const UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.deepPurple),
                           ),
@@ -97,11 +94,9 @@ class _AddContactScreenState extends State<AddContactScreen> {
                       const SizedBox(height: 16),
                       TextFormField(
                         controller: _topicsController,
-                        style: const TextStyle(color: Colors.black87),
                         decoration: InputDecoration(
                           labelText: 'Tópicos-chave',
                           hintText: 'Ex: Flutter, IA, Go...',
-                          labelStyle: TextStyle(color: Colors.grey.shade700),
                           focusedBorder: const UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.deepPurple),
                           ),
@@ -113,11 +108,7 @@ class _AddContactScreenState extends State<AddContactScreen> {
                       const SizedBox(height: 30),
                       ElevatedButton(
                         onPressed: _saveContact,
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 40, vertical: 12),
-                          backgroundColor: Colors.deepPurple,
-                        ),
+                        // O estilo virá do tema
                         child: Text(_isEditing ? 'Atualizar' : 'Salvar'),
                       ),
                     ],
@@ -127,7 +118,12 @@ class _AddContactScreenState extends State<AddContactScreen> {
             ),
           ),
         ),
-      ),
-    );
+      );
+
+    if (isDarkMode) {
+      return GradientContainer(child: mainContent);
+    }
+
+    return mainContent;
   }
 }

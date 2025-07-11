@@ -1,7 +1,7 @@
 import 'package:google_generative_ai/google_generative_ai.dart';
 
 class GeminiService {
-  // Use a variável de ambiente para a chave da API
+  // Usa a variável de ambiente para a chave da API
   static const String _apiKey = String.fromEnvironment('GEMINI_API_KEY');
 
   Future<String?> generateQuestions(String topics) async {
