@@ -24,4 +24,23 @@ class ContactProvider with ChangeNotifier {
     await _contactService.saveContacts(_contacts);
     notifyListeners();
   }
+
+  Future<void> deleteContact(Contact contact) async {
+    _contacts.remove(contact);
+    await _contactService.saveContacts(_contacts);
+    notifyListeners();
+  }
+
+  Future<void> updateContact({
+    required String id,
+    required String name,
+    required String topics,
+  }) async {
+    final contactIndex = _contacts.indexWhere((c) => c.id == id);
+    if (contactIndex >= 0) {
+      _contacts[contactIndex] = Contact(id: id, name: name, topics: topics);
+      await _contactService.saveContacts(_contacts);
+      notifyListeners();
+    }
+  }
 }

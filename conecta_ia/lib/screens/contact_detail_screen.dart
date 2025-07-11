@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../models/contact.dart';
-import '../services/gemini_service.dart';
+import 'package:conecta_ia/models/contact.dart';
+import 'package:conecta_ia/services/gemini_service.dart';
+import 'package:conecta_ia/widgets/gradient_container.dart';
 
 class ContactDetailScreen extends StatefulWidget {
   final Contact contact;
@@ -38,70 +39,91 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(widget.contact.name)),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Tópicos de Interesse:',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              widget.contact.topics,
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            const SizedBox(height: 24),
-            const Divider(),
-            const SizedBox(height: 16),
-            if (_isLoading)
-              const Center(child: CircularProgressIndicator())
-            else if (_generatedQuestions != null)
-              AnimatedOpacity(
-                opacity: _generatedQuestions != null ? 1.0 : 0.0,
-                duration: const Duration(milliseconds: 500),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Sugestões para a conversa:',
-                      style: Theme.of(context).textTheme.titleLarge,
+    return GradientContainer(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          title: Text(widget.contact.name),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          iconTheme: const IconThemeData(color: Colors.white),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Tópicos de Interesse:',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(color: Colors.white),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                widget.contact.topics,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.copyWith(color: Colors.white70),
+              ),
+              const SizedBox(height: 24),
+              const Divider(color: Colors.white30),
+              const SizedBox(height: 16),
+              Expanded(
+                child: _isLoading
+                    ? const Center(
+                        child: CircularProgressIndicator(color: Colors.white))
+                    : _generatedQuestions != null
+                        ? AnimatedOpacity(
+                            opacity: _generatedQuestions != null ? 1.0 : 0.0,
+                            duration: const Duration(milliseconds: 500),
+                            child: ListView(
+                              children: [
+                                Text(
+                                  'Sugestões para a conversa:',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge
+                                      ?.copyWith(color: Colors.white),
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  _generatedQuestions!,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(
+                                          height: 1.5, color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          )
+                        : Container(), // Espaço vazio se não houver perguntas
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20.0, top: 16.0),
+                child: Center(
+                  child: ElevatedButton.icon(
+                    onPressed: _isLoading ? null : _fetchQuestions,
+                    icon: const Icon(Icons.lightbulb_outline),
+                    label: Text(
+                      _generatedQuestions == null
+                          ? 'Gerar Perguntas'
+                          : 'Gerar Novamente',
                     ),
-                    const SizedBox(height: 12),
-                    Text(
-                      _generatedQuestions!,
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyLarge?.copyWith(height: 1.5),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.deepPurple,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 12),
                     ),
-                  ],
+                  ),
                 ),
               ),
-            const Spacer(), // Empurra o botão para baixo
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
-              child: Center(
-                child: ElevatedButton.icon(
-                  onPressed: _isLoading ? null : _fetchQuestions,
-                  icon: const Icon(Icons.lightbulb_outline),
-                  label: Text(
-                    _generatedQuestions == null
-                        ? 'Gerar Perguntas'
-                        : 'Gerar Novamente',
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 12,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
