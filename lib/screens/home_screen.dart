@@ -16,7 +16,7 @@ class HomeScreen extends StatelessWidget {
 
     // O conteúdo principal do Scaffold
     Widget mainContent = Scaffold(
-        // A cor de fundo é transparente no modo escuro para ver o gradiente
+        
         backgroundColor: isDarkMode ? Colors.transparent : null,
         appBar: AppBar(
           title: const Text(
