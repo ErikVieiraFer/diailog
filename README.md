@@ -22,7 +22,7 @@ Este projeto foi um desafio pessoal: **desenvolver um MVP (Minimum Viable Produc
 
 ## O Problema Resolvido
 
-Iniciar conversas com novas pessoas pode ser intimidador. O DiAIlog atua como seu "wingman" de networking, fornecendo a faísca inicial para uma conversa genuína, transformando um encontro casual em uma conexão valiosa.
+Iniciar conversas com novas pessoas pode ser intimidador. O DiAIlog atua como seu "wingman" de networking, fornecendo a faísca inicial para uma conversa genuína, transformando um encontro casual em uma conexão valiosa. 
 
 ---
 *Projeto desenvolvido por [Erik Vieira Ferreira].*
