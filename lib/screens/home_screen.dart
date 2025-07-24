@@ -16,7 +16,6 @@ class HomeScreen extends StatelessWidget {
 
     // O conteúdo principal do Scaffold
     Widget mainContent = Scaffold(
-        
         backgroundColor: isDarkMode ? Colors.transparent : null,
         appBar: AppBar(
           title: const Text(
@@ -27,7 +26,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           centerTitle: true,
-          backgroundColor: isDarkMode ? Colors.black.withOpacity(0.2) : null,
+          backgroundColor: isDarkMode ? const Color.fromARGB(29, 0, 0, 0) : null,
           elevation: isDarkMode ? 0 : null,
           actions: [
             IconButton(
